@@ -46,6 +46,9 @@ db.movies.find({
     }
 })
 
+use("db_mflix");
+db.movies.find({ $expr: { $eq: ["$cast", "$directors"] } });
+
 // Requete 11
 use("db_mflix");
 db.movies.find({ runtime: { $gte: 78, $lte: 120 } });
@@ -62,3 +65,20 @@ db.movies.find({ rated: { $not: /R/ } });
 use("db_mflix");
 db.movies.find({ title: { $regex: /^The/ } });
 
+// Requete 15
+use("db_mflix");
+db.movies.find({ "awards.wins": { $gte: 1 } });
+
+// Requete 16
+use("db_mflix");
+db.movies.find({
+    $expr: {
+        $eq: [
+            { $arrayElemAt: ["$cast", 1] },
+            "$directors"
+    ]}
+});
+
+// Requete 17
+use("db_mflix");
+db.movies.find({$and: [{cast: "Angelina Jolie"}, {cast: "Brad Pitt"}]});
