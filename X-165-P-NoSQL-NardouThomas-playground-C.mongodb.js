@@ -73,12 +73,33 @@ db.movies.find({ "awards.wins": { $gte: 1 } });
 use("db_mflix");
 db.movies.find({
     $expr: {
-        $eq: [
-            { $arrayElemAt: ["$cast", 1] },
-            "$directors"
-    ]}
+        $in: [
+            { $arrayElemAt: ["$cast", 0] },
+            { $arrayElemAt: ["$directors", 0] },
+        ]
+    }
 });
 
 // Requete 17
 use("db_mflix");
-db.movies.find({$and: [{cast: "Angelina Jolie"}, {cast: "Brad Pitt"}]});
+db.movies.find({ $and: [{ cast: "Angelina Jolie" }, { cast: "Brad Pitt" }] });
+
+// Requete 18
+use("db_mflix");
+db.movies.find({ $and: [{ cast: "Brad Pitt", num_mflix_comments: { $gte: 100 } }] });
+
+// Requete 19
+use("db_mflix");
+db.movies.find({ plot: { $regex: /woman/, $options: 'i' } });
+
+// Requete 20
+use("db_mflix");
+db.movies.find({ cast: "Tom Hanks", directors: { $nin: ["Tom Hanks"] } });
+
+// Requete 21
+use("db_mflix");
+db.movies.find({ cast: "Tom Hanks", directors: { $nin: ["Tom Hanks"] } }, {title: 1, year: 1});
+
+// Requete 21
+use("db_mflix");
+db.movies.find().skip(20);
