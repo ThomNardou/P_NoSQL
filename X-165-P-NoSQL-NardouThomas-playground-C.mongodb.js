@@ -98,7 +98,7 @@ db.movies.find({ cast: "Tom Hanks", directors: { $nin: ["Tom Hanks"] } });
 
 // Requete 21
 use("db_mflix");
-db.movies.find({ cast: "Tom Hanks", directors: { $nin: ["Tom Hanks"] } }, {title: 1, year: 1});
+db.movies.find({ cast: "Tom Hanks", directors: { $nin: ["Tom Hanks"] } }, { title: 1, year: 1 });
 
 // Requete 22
 use("db_mflix");
@@ -106,4 +106,41 @@ db.movies.find().skip(20);
 
 // Requete 23
 use("db_mflix");
-db.movies.find().skip(20);
+db.movies.find({
+    $or: [
+        { languages: "English" },
+        { languages: "French" },
+    ],
+    year: { $gte: 1980 },
+    $or: [
+        { "tomatoes.rotten": { $gt: 4 } },
+        { "imdb.rating": { $gte: 8 } },
+    ],
+    cast: "Brad Pitt",
+    plot: {$ne: {$regex: /nazi/, $options: 'i'}}
+},
+{
+    title: 1,
+});
+
+// Requete 24
+use("db_mflix");
+db.movies.find({
+    $or: [
+        { languages: "English" },
+        { languages: "French" },
+    ],
+    year: { $gte: 1980 },
+    $or: [
+        { "tomatoes.rotten": { $gt: 4 } },
+        { "imdb.rating": { $gte: 8 } },
+    ],
+    cast: "Brad Pitt",
+    plot: {$ne: {$regex: /nazi/, $options: 'i'}}
+},
+{
+    title: 1,
+}).sort(
+    {"tomatoes.rotten": 1, "imdb.rating": 1},
+);
+
