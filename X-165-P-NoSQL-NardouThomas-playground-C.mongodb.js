@@ -90,7 +90,7 @@ db.movies.find({ $and: [{ cast: "Brad Pitt", num_mflix_comments: { $gte: 100 } }
 
 // Requete 19
 use("db_mflix");
-db.movies.find({ plot: { $regex: /woman/, $options: 'i' } });
+db.movies.find({ cast: { $regex: /^(Mrs\.|Ms\.)/, $options: 'i' } });
 
 // Requete 20
 use("db_mflix");
@@ -100,6 +100,10 @@ db.movies.find({ cast: "Tom Hanks", directors: { $nin: ["Tom Hanks"] } });
 use("db_mflix");
 db.movies.find({ cast: "Tom Hanks", directors: { $nin: ["Tom Hanks"] } }, {title: 1, year: 1});
 
-// Requete 21
+// Requete 22
+use("db_mflix");
+db.movies.find().skip(20);
+
+// Requete 23
 use("db_mflix");
 db.movies.find().skip(20);
