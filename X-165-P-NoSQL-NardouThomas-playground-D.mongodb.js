@@ -157,23 +157,22 @@ db.movies.aggregate([
 use("db_mflix");
 db.movies.aggregate([
     {
+        $match: {
+            year: { $type: 'int' }
+        }
+    },
+    {
         $unwind: "$genres"
     },
     {
         $group: {
-            _id: {year: "$year", genres: "$genres"},
-            nbApparition: {$count: {}}
-        }
-    },
-    {
-        $group: {
-            _id: "$_id.genre",
-            maxApparition: { $max: "$nbApparition" }
+            _id: "$year",
+            BestApparition: {$max: "$genres"}
         }
     },
     {
         $sort: {
-            maxApparition: -1
+            BestApparition: -1
         }
     }
 ]);
