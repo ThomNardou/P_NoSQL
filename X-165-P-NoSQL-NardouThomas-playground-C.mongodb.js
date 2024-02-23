@@ -73,9 +73,9 @@ db.movies.find({ "awards.wins": { $gte: 1 } });
 use("db_mflix");
 db.movies.find({
     $expr: {
-        $in: [
+        $eq: [
             { $arrayElemAt: ["$cast", 0] },
-            { $arrayElemAt: ["$directors", 0] },
+            { $arrayElemAt: ["$directors", 0] }
         ]
     }
 });
