@@ -166,8 +166,14 @@ db.movies.aggregate([
     },
     {
         $group: {
-            _id: "$year",
-            BestApparition: {$max: "$genres"}
+            _id: {year: "$year", genres: "$genres"},
+            numberApparition: {$count: {}}
+        }
+    },
+    {
+        $group: {
+            _id: "$_id.year",
+            BestApparition: {$first: "$numberApparition"}
         }
     },
     {
@@ -225,16 +231,37 @@ db.movies.aggregate([
 use("db_mflix");
 db.movies.aggregate([
     {
+        $sort: {
+            countries: 1
+        }
+    }, 
+    {
         $unwind: "$countries",
     },
+    {
+        $sort: {
+            genres: 1
+        }
+    }, 
     {
         $unwind: "$genres",
     },
     {
         $group: {
-            _id: "$countries",
-            genres: {$addToSet: "$genres"}
+            _id: {country: "$countries", genres: "$genres"},
+            numberApparition : { $count: {}}
         }
     },
-    $p
+    {
+        $group: {
+          _id: { pays: "$_id.country"},
+          genres: {$first: "$_id.genres"},
+          mostPopular: { $first: "$numberApparition"},
+        }
+    },
+    {
+        $sort: {
+            mostPopular: -1,
+        }
+    }
 ]);
