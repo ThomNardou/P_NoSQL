@@ -46,9 +46,6 @@ db.movies.find({
     }
 })
 
-use("db_mflix");
-db.movies.find({ $expr: { $eq: ["$cast", "$directors"] } });
-
 // Requete 11
 use("db_mflix");
 db.movies.find({ runtime: { $gte: 78, $lte: 120 } });
@@ -79,6 +76,9 @@ db.movies.find({
         ]
     }
 });
+
+use("db_mflix");
+db.movies.find({ $expr: { $eq: ["$cast", "$directors"] } });
 
 // Requete 17
 use("db_mflix");

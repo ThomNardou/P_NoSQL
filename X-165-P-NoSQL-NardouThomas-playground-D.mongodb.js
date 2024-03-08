@@ -166,14 +166,14 @@ db.movies.aggregate([
     },
     {
         $group: {
-            _id: {year: "$year", genres: "$genres"},
-            numberApparition: {$count: {}}
+            _id: { year: "$year", genres: "$genres" },
+            numberApparition: { $count: {} }
         }
     },
     {
         $group: {
             _id: "$_id.year",
-            BestApparition: {$first: "$numberApparition"}
+            BestApparition: { $first: "$numberApparition" }
         }
     },
     {
@@ -234,7 +234,7 @@ db.movies.aggregate([
         $sort: {
             countries: 1
         }
-    }, 
+    },
     {
         $unwind: "$countries",
     },
@@ -242,26 +242,119 @@ db.movies.aggregate([
         $sort: {
             genres: 1
         }
-    }, 
+    },
     {
         $unwind: "$genres",
     },
     {
         $group: {
-            _id: {country: "$countries", genres: "$genres"},
-            numberApparition : { $count: {}}
+            _id: { country: "$countries", genres: "$genres" },
+            numberApparition: { $count: {} }
         }
     },
     {
         $group: {
-          _id: { pays: "$_id.country"},
-          genres: {$first: "$_id.genres"},
-          mostPopular: { $first: "$numberApparition"},
+            _id: { pays: "$_id.country" },
+            genres: { $first: "$_id.genres" },
+            mostPopular: { $first: "$numberApparition" },
         }
     },
     {
         $sort: {
             mostPopular: -1,
+        }
+    }
+]);
+
+// Exercice 13
+// Trouver le nombre de films par classification et par décennie
+use("db_mflix");
+db.movies.aggregate([
+    {
+        $match: {
+            year: { $type: "number" }
+        }
+    },
+    {
+        $addFields: {
+            decennie: { $round: ["$year", -1] }
+        }
+    },
+    {
+        $group: {
+            _id: { rated: "$rated", decennie: "$decennie" },
+            nbFilm: { $count: {} },
+        }
+    },
+    {
+        $sort: {
+            decennie: -1
+        }
+    }
+]);
+
+// Exercice 14
+// Calculer le nombre total de films et la durée moyenne des films par réalisateur
+use("db_mflix");
+db.movies.aggregate([
+    {
+        $unwind: "$directors"
+    },
+    {
+        $group: {
+            _id: "$directors",
+            avg: { $avg: "$runtime" },
+            nbFilm: { $count: {} },
+        }
+    }
+]);
+
+// Exercice 15
+// Notre objectif est de créer des groupes par pays. Pour chaque pays, nous voulons 
+// créer des groupes de chaque genre et obtenir le nombre de films, la note moyenne 
+// des films et la part de marché (nombre de films d'un genre pour un pays / total de 
+// films du pays).
+use("db_mflix");
+db.movies.aggregate([
+    {
+        $unwind: "$countries"
+    },
+    {
+        $unwind: "$genres"
+    },
+    {
+        $group: {
+            _id: { country: "$countries", genres: "$genres" },
+            nbFilm: { $count: {} },
+            moyenneNote: {$avg: "$imdb.rating"}
+        }
+    },
+    {
+        $group: {
+            _id: "$_id.country",
+            nombreTotalFilm: {$sum: "$nbFilm"},
+            genres: {
+                $push: {
+                    genres: "$_id.genres",
+                    nombreFilm: "$nbFilm",
+                    moyenneNote: {$round: ["$moyenneNote", 2]}
+                }
+            },
+        }
+    },
+    {
+        $unwind: "$genres"
+    },
+    {
+        $addFields :{
+          "genres.partDeMarcher": {$divide: ["$genres.nombreFilm", "$nombreTotalFilm"]}
+        }
+    },
+    {
+        $group: {
+          _id: "$_id",
+          genres: { $push: "$genres" },
+          nombreTotalFilm: { $first: "$nombreTotalFilm" }
         }
     }
 ]);

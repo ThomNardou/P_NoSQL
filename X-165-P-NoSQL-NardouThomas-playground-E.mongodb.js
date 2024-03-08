@@ -19,22 +19,30 @@ db.movies.find({
 });
 
 // Exercice 4
+//Il faut créer un index avant comme ça la recherche textuelle ce fait sur les deux champs
+use("db_mflix");
+db.movies.createIndex({ plot: "text", fullplot: "text" });
+
 use("db_mflix");
 db.movies.find({
     $text: {
         $search: "space -\"mars\"",
         $caseSensitive: false
     }
-}, {_id: 0, fullplot: 1, });
+});
 
 // Exercice 5
+//Il faut créer un index avant (si il existe pas) comme ça la recherche textuelle ce fait sur les deux champs
+use("db_mflix");
+db.movies.createIndex({ plot: "text", fullplot: "text" });
+
 use("db_mflix");
 db.movies.find({
     $text: {
         $search: "\"time travel \"",
         $caseSensitive: false
     }
-}, {_id: 0, fullplot: 1, });
+});
 
 // Exercice 6
 use("db_mflix");
