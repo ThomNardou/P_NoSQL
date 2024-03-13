@@ -2,14 +2,18 @@ use("db_mflix");
 db.movies.getIndexes();
 
 // Exercice 1
+// Recherche des films contenant le mot-clé « matrix »
 use("db_mflix");
 db.movies.find({ $text: { $search: "matrix" } });
 
 // Exercice 2
+// Recherche tous les films contenant la phase « best movie ever »
 use("db_mflix");
 db.movies.find({ $text: { $search: "\'best movie ever\'" } });
 
 // Exercice 3
+// Recherche des films contenant le terme « war », tout en excluant ceux contenant le 
+// terme « world »
 use("db_mflix");
 db.movies.find({
     $text: {
@@ -19,7 +23,8 @@ db.movies.find({
 });
 
 // Exercice 4
-//Il faut créer un index avant comme ça la recherche textuelle ce fait sur les deux champs
+// Trouver des films où la description contient « space » mais pas « mars »
+// Il faut créer un index avant (si il existe pas) comme ça la recherche textuelle ce fait sur les deux champs
 use("db_mflix");
 db.movies.createIndex({ plot: "text", fullplot: "text" });
 
@@ -32,7 +37,8 @@ db.movies.find({
 });
 
 // Exercice 5
-//Il faut créer un index avant (si il existe pas) comme ça la recherche textuelle ce fait sur les deux champs
+// Trouver des films avec le mot exact « time travel » dans la description
+// Il faut créer un index avant (si il existe pas) comme ça la recherche textuelle ce fait sur les deux champs
 use("db_mflix");
 db.movies.createIndex({ plot: "text", fullplot: "text" });
 
@@ -45,6 +51,8 @@ db.movies.find({
 });
 
 // Exercice 6
+// Rechercher des films avec des mots commençant par « inter » dans le titre
+// On ne peut pas faire avec une recherche textuel car elle permet pas d'utiliser du regex
 use("db_mflix");
 db.movies.find({
     title: /^inter/i

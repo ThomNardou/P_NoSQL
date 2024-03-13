@@ -1,7 +1,5 @@
 
 //////////////////////////////////// INDEX ////////////////////////////////////
-use("db_mflix");
-db.movies.createIndex({ genres: 1 });
 
 use("db_mflix");
 db.movies.createIndex({ title: "text", fullplot: "text" });
@@ -16,18 +14,18 @@ db.users.createIndex({ email: 1 }, { unique: true });
 //////////////////////////////////// REQUETES EXEMPLE ////////////////////////////////////
 
 use("db_mflix");
-db.users.find({email: /\.com$/}).explain('executionStats');
-
+db.users.find({email: /\.com$/});
 
 use("db_mflix");
-db.comments.find({ text: /veritatis/ }).explain('executionStats');
+db.comments.find({ text: /veritatis/ });
+
 use("db_mflix");
 db.comments.find({ $text: {$search: "veritatis"} });
 
 
 //////////////////////////////////// UTILS ////////////////////////////////////
 use("db_mflix");
-db.comments.getIndexes();
+db.movies.getIndexes();
 
 use("db_mflix");
 db.comments.dropIndexes();

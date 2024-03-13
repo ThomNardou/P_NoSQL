@@ -40,7 +40,7 @@ db.movies.aggregate([
     }
 ]);
 
-// Exercice 4   TODO
+// Exercice 4   
 // Calculer la durée moyenne des films par décennie
 use("db_mflix");
 db.movies.aggregate([
@@ -174,11 +174,6 @@ db.movies.aggregate([
         $group: {
             _id: "$_id.year",
             BestApparition: { $first: "$numberApparition" }
-        }
-    },
-    {
-        $sort: {
-            BestApparition: -1
         }
     }
 ]);
