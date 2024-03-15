@@ -94,9 +94,3 @@ db.createUser({
     pwd: "user1234",
     roles: [{ role: "Utilisateur", db: "db_mflix" }]
 });
-
-use("db_mflix");
-db.getUsers();
-
-use("db_mflix");
-db.dropRole("Manager");
